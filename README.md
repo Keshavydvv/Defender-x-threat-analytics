@@ -116,6 +116,14 @@ Azure Workbook Editor
 
 Mimikatz (for credential theft simulation)
 
+## Topics
+
+`microsoft-sentinel` &nbsp;&nbsp; `microsoft-defender` &nbsp;&nbsp; `logic-apps`  
+`azure-security` &nbsp;&nbsp; `siem` &nbsp;&nbsp; `soar` &nbsp;&nbsp; `kql`  
+`cybersecurity` &nbsp;&nbsp; `threat-detection` &nbsp;&nbsp; `incident-response`  
+`automation` &nbsp;&nbsp; `mimikatz` &nbsp;&nbsp; `xdr` &nbsp;&nbsp; `security-analytics`
+
+
 Author
 Keshav Yadav
 Cybersecurity and Cloud Enthusiast
