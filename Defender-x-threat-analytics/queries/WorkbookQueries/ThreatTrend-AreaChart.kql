@@ -1,6 +1,7 @@
+*///Used in workbook's area chart to display alert trends over time.///*
+
+
 SecurityAlert
 | where TimeGenerated > ago(1d)
 | summarize Count = count() by AlertName, bin(TimeGenerated, 1h)
 | sort by TimeGenerated desc
-
-*///Used in workbook's area chart to display alert trends over time.///*
