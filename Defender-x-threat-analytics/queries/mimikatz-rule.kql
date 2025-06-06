@@ -1,3 +1,6 @@
+*///Detects Mimikatz credential theft attempts reported by Microsoft Defender for Endpoint.///*
+
+
 SecurityAlert
 | where ProductName == "Microsoft Defender Advanced Threat Protection"
 | sort by TimeGenerated desc
