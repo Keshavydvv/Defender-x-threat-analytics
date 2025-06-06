@@ -1,3 +1,7 @@
+*///Used in workbook's data grid to show top 5 frequent alerts.///*
+
+
+
 SecurityAlert
 | summarize Total = count() by AlertName
 | top 5 by Total
