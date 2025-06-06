@@ -1,3 +1,6 @@
+*Used in workbook's pie chart to visualize severity breakdown.*
+
+
 SecurityAlert
 | summarize count() by AlertSeverity
 | sort by count_ desc
