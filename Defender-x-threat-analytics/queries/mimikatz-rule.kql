@@ -1,0 +1,3 @@
+SecurityAlert
+| where ProductName == "Microsoft Defender Advanced Threat Protection"
+| sort by TimeGenerated desc

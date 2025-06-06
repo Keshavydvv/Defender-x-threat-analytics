@@ -1,0 +1,97 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "contentVersion": "1.0.0.0",
+        "triggers": {
+            "Microsoft_Sentinel_alert": {
+                "type": "ApiConnectionWebhook",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azuresentinel']['connectionId']"
+                        }
+                    },
+                    "body": {
+                        "callback_url": "@{listCallbackUrl()}"
+                    },
+                    "path": "/subscribe"
+                }
+            }
+        },
+        "actions": {
+            "Send_an_email_(V2)": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['outlook']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "body": {
+                        "To": "keshavyadav2004@icloud.com",
+                        "Subject": "🚨 Alert: @{triggerOutputs()?['body/Alert display name']}\n",
+                        "Body": "<p class=\"editor-paragraph\">&lt;b&gt;Alert Name:&lt;/b&gt; @{triggerOutputs()?['body/Alert display name']}&lt;br&gt;<br>&lt;b&gt;Type:&lt;/b&gt; @{triggerOutputs()?['body/Alert type']}&lt;br&gt;<br>&lt;b&gt;System Alert ID:&lt;/b&gt; @{triggerOutputs()?['body/System alert ID']}&lt;br&gt;<br>&lt;b&gt;Provider ID:&lt;/b&gt; @{triggerOutputs()?['body/Provider alert ID']}&lt;br&gt;</p><br>",
+                        "Importance": "Normal"
+                    },
+                    "path": "/v2/Mail"
+                },
+                "runAfter": {}
+            },
+            "Advanced_Hunting": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['wdatp']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "body": {
+                        "Query": "DeviceNetworkEvents\n| where Timestamp > ago(1h)\n| where RemoteUrl contains \"powershell\" or InitiatingProcessCommandLine contains \"invoke-webrequest\"\n| project Timestamp, DeviceName, ReportId, RemoteUrl, InitiatingProcessCommandLine\n"
+                    },
+                    "path": "/api/advancedqueries/run"
+                },
+                "runAfter": {
+                    "Send_an_email_(V2)": [
+                        "Succeeded"
+                    ]
+                }
+            }
+        },
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "type": "Object",
+                "defaultValue": {}
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "type": "Object",
+            "value": {
+                "azuresentinel": {
+                    "id": "/subscriptions/06bdbaf9-12fc-4eca-a0b8-f23a02c1d2a8/providers/Microsoft.Web/locations/eastus/managedApis/azuresentinel",
+                    "connectionId": "/subscriptions/06bdbaf9-12fc-4eca-a0b8-f23a02c1d2a8/resourceGroups/DefenderLab/providers/Microsoft.Web/connections/azuresentinel-HoneyTrap-AlertResponse",
+                    "connectionName": "azuresentinel-HoneyTrap-AlertResponse",
+                    "connectionProperties": {
+                        "authentication": {
+                            "type": "ManagedServiceIdentity"
+                        }
+                    }
+                },
+                "outlook": {
+                    "id": "/subscriptions/06bdbaf9-12fc-4eca-a0b8-f23a02c1d2a8/providers/Microsoft.Web/locations/eastus/managedApis/outlook",
+                    "connectionId": "/subscriptions/06bdbaf9-12fc-4eca-a0b8-f23a02c1d2a8/resourceGroups/DefenderLab/providers/Microsoft.Web/connections/outlook",
+                    "connectionName": "outlook"
+                },
+                "wdatp": {
+                    "id": "/subscriptions/06bdbaf9-12fc-4eca-a0b8-f23a02c1d2a8/providers/Microsoft.Web/locations/eastus/managedApis/wdatp",
+                    "connectionId": "/subscriptions/06bdbaf9-12fc-4eca-a0b8-f23a02c1d2a8/resourceGroups/DefenderLab/providers/Microsoft.Web/connections/wdatp",
+                    "connectionName": "wdatp"
+                }
+            }
+        }
+    }
+}
