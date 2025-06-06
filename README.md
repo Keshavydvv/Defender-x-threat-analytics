@@ -50,17 +50,20 @@ The custom workbook visualizes alert data using KQL queries in the following way
 ### KQL Queries Used
 
 // Trend over time (Area Chart)
+
 SecurityAlert
 | where TimeGenerated > ago(1d)
 | summarize Count = count() by AlertName, bin(TimeGenerated, 1h)
 | sort by TimeGenerated desc
 
 // Alert severity breakdown (Pie Chart)
+
 SecurityAlert
 | summarize count() by AlertSeverity
 | sort by count_ desc
 
 // Top 5 frequent alerts (Grid)
+
 SecurityAlert
 | summarize Total = count() by AlertName
 | top 5 by Total
