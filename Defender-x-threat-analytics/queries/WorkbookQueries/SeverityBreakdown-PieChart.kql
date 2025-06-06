@@ -1,0 +1,3 @@
+SecurityAlert
+| summarize count() by AlertSeverity
+| sort by count_ desc
